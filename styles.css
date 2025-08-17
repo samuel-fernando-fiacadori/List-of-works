@@ -64,7 +64,8 @@ body {
 .services-courousel {
     width: 100%;
     max-width: 100vw;
-    overflow-x: auto;
+    overflow-x: hidden;
+    overflow-y: hidden;
     display: flex;
     gap: 10rem;
     scroll-padding: 30px;
@@ -73,9 +74,27 @@ body {
     scroll-behavior: smooth;
     anchor-name: --courousel;
     scroll-snap-type: x mandatory;
+    scroll-marker-group: after;
     
 }
 
+.services-courousel::scroll-marker-group {
+    display: flex;
+    justify-content: center;
+    gap: .5em;
+}
+
+.service::scroll-marker {
+    content: "";
+    height: 1em;
+    width: 1em;
+    background-color: var(--primary-bg);
+    border-radius: 50%;
+    transition: background-color 0.3s ease-in-out;
+}
+.service::scroll-marker:target-current {
+    background-color: var(--highlight-color);
+}
 .services-courousel::-webkit-scrollbar {
     display: none;
 }
@@ -225,6 +244,7 @@ hr {
 
 /* ---------------------- LINKS E BOTÕES ---------------------- */
 .service-links {
+    margin-top: auto;
     text-align: center;
     display: flex;
     flex-direction: column;
