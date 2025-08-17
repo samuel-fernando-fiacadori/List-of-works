@@ -1,9 +1,10 @@
-    :root {
-    --primary-bg: #1a1a2e; /* Azul Escuro */
-    --secondary-bg: #162447; /* Azul Petróleo */
-    --text-color: #e4e6eb; /* Branco Gelo */
-    --highlight-color: #e94560; /* Vermelho vibrante */
-    --border-color: #2e3a59; /* Azul escuro mais claro */
+/* ---------------------- VARIÁVEIS CSS (Tudo em um só lugar) ---------------------- */
+:root {
+    --primary-bg: #1a1a2e;
+    --secondary-bg: #162447;
+    --text-color: #e4e6eb;
+    --highlight-color: #e94560;
+    --border-color: #2e3a59;
     --card-bg: rgba(30, 41, 69, 0.85);
     --button-bg: #45e96e;
     --button-hover: #155a08;
@@ -11,19 +12,21 @@
 
     /* Sombras e efeitos */
     --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.2);
+    --shadow-dark: 0 8px 25px rgba(0, 0, 0, 0.3);
     --glow-effect: 0 0 10px var(--highlight-color), 0 0 20px var(--highlight-color);
 
     /* Tamanhos e espaçamentos */
-    --container-width: 800px;
+    --container-width: 900px;
     --padding-xl: 3rem;
-    --padding-lg: 2rem;
+    --padding-lg: 2.5rem;
     --padding-md: 1.5rem;
+    --padding-sm: 1rem;
     --border-radius-lg: 15px;
     --border-radius-sm: 8px;
     --gap-md: 1.5rem;
 }
 
-/* ---------------------- ESTILOS GLOBAIS ---------------------- */
+/* ---------------------- ESTILOS GLOBAIS E ESTRUTURA ---------------------- */
 * {
     margin: 0;
     padding: 0;
@@ -32,28 +35,23 @@
 }
 
 body {
-    background: url("assets/background.jpg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+    background: url("assets/background.jpg") center/cover no-repeat fixed;
     color: var(--text-color);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 2rem 1rem;
+    padding: var(--padding-lg) var(--padding-sm);
     line-height: 1.6;
-    height: 100dvh;
 }
 
 .content {
-    height: 100%;
     width: 95%;
     max-width: var(--container-width);
     background-color: var(--card-bg);
     border-radius: var(--border-radius-lg);
     border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-light);
+    box-shadow: var(--shadow-dark);
     padding: var(--padding-lg);
     display: flex;
     flex-direction: column;
@@ -62,32 +60,103 @@ body {
     overflow-y: auto;
 }
 
-.service h3 {
+/* ---------------------- CAROUSEL DE SERVIÇOS ---------------------- */
+.services-courousel {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: auto;
     display: flex;
-    flex-direction: row;
-    justify-content: start;
-    gap: 10px;
-    align-items: center;
+    gap: 10rem;
+    scroll-padding: 30px;
+    padding: 0px 100px;
+    scrollbar-color: var(--highlight-color) var(--secondary-bg); /* Firefox */
+    scroll-behavior: smooth;
+    anchor-name: --courousel;
+    scroll-snap-type: x mandatory;
+    
 }
 
-.service h3 img {
-    width: 24px;
-    height: 24px;
+.services-courousel::-webkit-scrollbar {
+    display: none;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.services-courousel::scroll-button(right), .services-courousel::scroll-button(left) {
+    content: ">";
+    border: none;
+    background-color: #e945609a;
+    color: black;
+    font-family: Consolas;
+    font-size: 3rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    padding-bottom: .1em;
+    transition: background-color 0.3s ease-in;
+    cursor: pointer;
+    position: fixed;
+    position-anchor: --courousel;
+    position-area: right center;
+    transform: translateX(-50%);
 }
 
+.services-courousel::scroll-button(left) {
+    content: "<";
+    position-area: left center;
+    transform: translateX(50%);
+}
+
+.services-courousel::scroll-button(right):hover {
+    background-color: var(--border-color);
+    
+}
+
+.services-courousel.services-courousel::scroll-button(right):disabled, .services-courousel.services-courousel::scroll-button(left):disabled {
+    opacity: 0.5;
+    background-color: #561924;
+    cursor: auto;
+}
+
+/* Esconde a barra de rolagem no Webkit */
+.services-courousel::-webkit-scrollbar {
+    height: 8px;
+}
+
+.services-courousel::-webkit-scrollbar-track {
+    background: var(--secondary-bg);
+    border-radius: 10px;
+}
+
+.services-courousel::-webkit-scrollbar-thumb {
+    background-color: var(--highlight-color);
+    border-radius: 10px;
+    border: 2px solid var(--secondary-bg);
+}
+
+.service {
+    scroll-snap-align: start;
+    min-width: 300px; /* Garante que os cards não fiquem muito pequenos */
+    flex-shrink: 0; /* Impede que os cards encolham */
+    background-color: var(--secondary-bg);
+    border-radius: var(--border-radius-sm);
+    padding: var(--padding-md);
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    scroll-snap-align: center;
+    display: flex;
+    flex: 0 0 80%;
+    flex-direction: column;
+
+
+}
+
+.service:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: var(--shadow-dark);
+}
+
+/* ---------------------- ESTILOS DE TEXTO E ELEMENTOS ---------------------- */
 h1 {
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 5vw, 2.5rem);
     color: var(--text-color);
     text-align: center;
     margin-bottom: var(--gap-md);
@@ -101,42 +170,9 @@ h1 {
     animation: pulse 2s infinite ease-in-out;
 }
 
-@keyframes pulse {
-    0%, 100% {
-        filter: brightness(1);
-    }
-    50% {
-        filter: brightness(1.3);
-    }
-}
-
-.service {
-    background-color: var(--secondary-bg);
-    border-radius: var(--border-radius-sm);
-    padding: var(--padding-md);
-    border: 1px solid var(--border-color);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.service:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
-
-.service-header {
-    margin-bottom: 1rem;
-}
-
 .service-header h2 {
     font-size: 1.8rem;
     font-weight: 500;
-}
-
-hr {
-    border: none;
-    height: 1px;
-    background-color: var(--border-color);
-    margin: 1.5rem 0;
 }
 
 .service-data h3 {
@@ -144,6 +180,12 @@ hr {
     margin-bottom: 0.5rem;
     color: var(--text-color);
     font-weight: 400;
+}
+
+.service-data h3 img {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
 }
 
 ul {
@@ -171,13 +213,23 @@ ul li::before {
     font-size: 1.1em;
     margin-top: 1rem;
     text-align: center;
+    flex-grow: 1; /* Para alinhar o rodapé */
 }
 
+hr {
+    border: none;
+    height: 1px;
+    background-color: var(--border-color);
+    margin: var(--padding-md) 0;
+}
+
+/* ---------------------- LINKS E BOTÕES ---------------------- */
 .service-links {
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-top: var(--padding-md);
 }
 
 .service-links p {
@@ -186,7 +238,10 @@ ul li::before {
 
 .service-links a {
     display: flex;
-    width: 50%;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 250px;
     padding: 15px 30px;
     background-color: var(--button-bg);
     color: var(--text-color);
@@ -202,23 +257,22 @@ ul li::before {
 
 .service-links a:hover {
     background-color: var(--button-hover);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-    animation: color-changer 5s infinite;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: var(--shadow-dark);
 }
 
-@keyframes color-changer {
-    0% {
-        color: var(--text-color);
-    }
-    50% {
-        color: rgb(206, 248, 182);
-    }
-    100% {
-        color: var(--text-color);
-    }
+a .image-btn {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+    transition: transform 0.3s ease;
 }
 
+.service-links a:hover .image-btn {
+    transform: rotate(15deg);
+}
+
+/* ---------------------- RODAPÉ ---------------------- */
 footer {
     text-align: center;
     margin-top: 1.5rem;
@@ -237,41 +291,55 @@ footer a:hover {
     text-decoration: underline;
 }
 
-a .image-btn {
-    width: 20px;
-    height: 20px;
-    margin-right: 8px;
-    vertical-align: middle;
-    transition: all 0.5s ease-in;
+/* ---------------------- ANIMAÇÕES ---------------------- */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-a:hover .image-btn{
-    width: 25px;
-    height: 25px;
+@keyframes pulse {
+    0%, 100% {
+        filter: brightness(1);
+    }
+    50% {
+        filter: brightness(1.3);
+    }
 }
 
-
-
-
-
-/* Responsividade */
-@media (max-width: 600px) {
-    .content {
-        padding: 1rem;
+/* ---------------------- RESPONSIVIDADE ---------------------- */
+@media (max-width: 768px) {
+    :root {
+        --container-width: 95%;
+        --padding-lg: 1.5rem;
+        --padding-md: 1rem;
+    }
+    body {
+        padding: var(--padding-md);
     }
     h1 {
-        font-size: 2rem;
+        font-size: clamp(1.8rem, 8vw, 2.2rem);
     }
-    .service-header h2 {
-        font-size: 1.5rem;
+    .service {
+        min-width: 250px;
     }
-    .service-links a {
-        padding: 12px 20px;
-        font-size: 10px;
-        gap: 4px;
+}
+
+@media (max-width: 600px) {
+    .service {
+        flex: 0 0 100%;
     }
-    .service-links img {
-        width: 10px;
-        height: 10px;
+    .services-courousel.services-courousel::scroll-button(left), .services-courousel.services-courousel::scroll-button(right) {
+        font-size: 20px;
+        width: 24px;
+        height: 24px;
     }
+
+
+
 }
